@@ -1,0 +1,5 @@
+{
+  "name": "Coursera Insights",
+  "description": "An interactive informational page about Coursera, featuring platform statistics, learning paths, and details on how it works.",
+  "requestFramePermissions": []
+}
