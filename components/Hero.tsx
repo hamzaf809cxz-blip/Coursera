@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
             
             <h1 className="text-5xl lg:text-7xl font-extrabold leading-[1.1] text-white">
               Learn without <br />
-              <span className="text-gradient drop-shadow-2xl">Limits</span>
+              <span className="text-shimmer drop-shadow-2xl inline-block">Limits</span>
             </h1>
             
             <p className="text-xl text-slate-300 leading-relaxed max-w-lg border-l-2 border-blue-500/50 pl-6">
@@ -48,11 +48,11 @@ const Hero: React.FC = () => {
 
             <div className="pt-8 border-t border-white/10 flex gap-8">
               {[
-                { Icon: Globe, label: "Global Access" },
-                { Icon: Award, label: "Recognized Certs" },
-                { Icon: Video, label: "Flexible Video" }
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group">
+                { Icon: Globe, label: "Global Access", id: 'global' },
+                { Icon: Award, label: "Recognized Certs", id: 'certs' },
+                { Icon: Video, label: "Flexible Video", id: 'video' }
+              ].map((item) => (
+                <div key={item.id} className="flex items-center gap-3 text-slate-400 hover:text-white transition-colors group">
                   <div className="p-2 bg-white/5 rounded-lg group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors">
                     <item.Icon size={20} />
                   </div>

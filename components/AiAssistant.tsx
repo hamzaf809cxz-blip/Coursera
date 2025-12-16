@@ -4,9 +4,11 @@ import { sendMessageStream } from '../services/geminiService';
 import { Message } from '../types';
 import { GenerateContentResponse } from "@google/genai";
 
+const generateId = () => Math.random().toString(36).substr(2, 9);
+
 const AiAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', text: "Greetings. I am your Coursera Intelligence Unit. Query me regarding learning paths, financial structures, or academic partnerships." }
+    { id: 'init', role: 'model', text: "Greetings. I am your Coursera Intelligence Unit. Query me regarding learning paths, financial structures, or academic partnerships." }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +26,7 @@ const AiAssistant: React.FC = () => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: 'user', text: input };
+    const userMessage: Message = { id: generateId(), role: 'user', text: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -33,29 +35,25 @@ const AiAssistant: React.FC = () => {
       const responseStream = await sendMessageStream(userMessage.text);
       
       let fullResponse = "";
+      const messageId = generateId();
       
       // Add a placeholder message for the model
-      setMessages(prev => [...prev, { role: 'model', text: '' }]);
+      setMessages(prev => [...prev, { id: messageId, role: 'model', text: '' }]);
 
       for await (const chunk of responseStream) {
         const c = chunk as GenerateContentResponse;
         const textChunk = c.text || "";
         fullResponse += textChunk;
         
-        // Update the last message (model's response) with the accumulated text
-        setMessages(prev => {
-          const newMessages = [...prev];
-          const lastMessage = newMessages[newMessages.length - 1];
-          if (lastMessage.role === 'model') {
-            lastMessage.text = fullResponse;
-          }
-          return newMessages;
-        });
+        // Update the specific message by ID
+        setMessages(prev => prev.map(msg => 
+          msg.id === messageId ? { ...msg, text: fullResponse } : msg
+        ));
       }
 
     } catch (error) {
       console.error("Chat error", error);
-      setMessages(prev => [...prev, { role: 'model', text: "Connection interrupted. Re-establishing link...", isError: true }]);
+      setMessages(prev => [...prev, { id: generateId(), role: 'model', text: "Connection interrupted. Re-establishing link...", isError: true }]);
     } finally {
       setIsLoading(false);
     }
@@ -63,8 +61,9 @@ const AiAssistant: React.FC = () => {
 
   return (
     <section id="ai-guide" className="py-24 bg-black relative border-t border-white/10">
-      {/* Background Matrix-like effect subtle */}
-      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-black to-black"></div>
+      {/* Scanline Effect */}
+      <div className="absolute inset-0 bg-[url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z5Z2Z5ZnZ5ZnZ5ZnZ5ZnZ5ZnZ5ZnZ5ZnZ5ZiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/xT9IgIc0lryrxAoWwE/giphy.gif')] opacity-[0.03] pointer-events-none mix-blend-screen"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_2px,3px_100%] pointer-events-none z-0"></div>
 
       <div className="container mx-auto px-6 max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row gap-8 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,86,210,0.2)]">
@@ -91,7 +90,7 @@ const AiAssistant: React.FC = () => {
                   "How does financial aid work?"
                 ].map((query, i) => (
                   <button 
-                    key={i}
+                    key={`q-${i}`}
                     onClick={() => setInput(query)} 
                     className="group flex items-center w-full text-left bg-white/5 hover:bg-blue-600/20 border border-white/5 hover:border-blue-500/50 p-3 rounded-xl text-xs text-slate-300 transition-all duration-300"
                   >
@@ -109,10 +108,10 @@ const AiAssistant: React.FC = () => {
           </div>
 
           {/* Chat Interface */}
-          <div className="md:w-2/3 flex flex-col h-[600px] relative">
+          <div className="md:w-2/3 flex flex-col h-[600px] relative bg-black/50">
             <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
-              {messages.map((msg, idx) => (
-                <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
+              {messages.map((msg) => (
+                <div key={msg.id} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
                   
                   {msg.role === 'model' && (
                     <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-lg border border-white/10">

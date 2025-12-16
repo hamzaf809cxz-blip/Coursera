@@ -3,10 +3,10 @@ import { UserPlus, Search, PlayCircle, Award } from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
   const steps = [
-    { icon: UserPlus, title: "Join for Free", desc: "Sign up and explore thousands of courses at no cost." },
-    { icon: Search, title: "Find Your Path", desc: "Choose from individual courses, specializations, or degrees." },
-    { icon: PlayCircle, title: "Start Learning", desc: "Watch videos, read materials, and complete assignments." },
-    { icon: Award, title: "Earn a Certificate", desc: "Receive a shareable certificate upon completion (paid)." }
+    { id: 'step-join', icon: UserPlus, title: "Join for Free", desc: "Sign up and explore thousands of courses at no cost." },
+    { id: 'step-find', icon: Search, title: "Find Your Path", desc: "Choose from individual courses, specializations, or degrees." },
+    { id: 'step-start', icon: PlayCircle, title: "Start Learning", desc: "Watch videos, read materials, and complete assignments." },
+    { id: 'step-earn', icon: Award, title: "Earn a Certificate", desc: "Receive a shareable certificate upon completion (paid)." }
   ];
 
   return (
@@ -21,7 +21,11 @@ export const HowItWorks: React.FC = () => {
           <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
 
           {steps.map((step, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center relative group">
+            <div 
+              key={step.id} 
+              className="flex flex-col items-center text-center relative group animate-fade-in-up" 
+              style={{ animationDelay: `${idx * 150}ms` }}
+            >
                <div className="w-24 h-24 bg-dark-surface border border-white/10 rounded-full flex items-center justify-center mb-8 relative z-10 shadow-[0_0_20px_rgba(0,0,0,0.5)] group-hover:border-blue-500 group-hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-500">
                  <div className="absolute inset-0 rounded-full bg-blue-500/10 scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                  <step.icon size={36} className="text-slate-300 group-hover:text-white transition-colors" />

@@ -61,8 +61,9 @@ const Header: React.FC = () => {
             href="https://www.coursera.org" 
             target="_blank" 
             rel="noreferrer"
-            className="relative overflow-hidden bg-white/10 hover:bg-white/20 text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 border border-white/10 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+            className="relative group overflow-hidden bg-white/10 hover:bg-white/20 text-white px-6 py-2.5 rounded-full font-semibold transition-all duration-300 border border-white/10 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]"
           >
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
             Visit Official Site
           </a>
         </nav>
